@@ -1,7 +1,7 @@
 # API para gestionar posts con Login JWT
 Proyecto backend donde gestionaremos un login/signin con JWT y los usuarios podrán hacer uso de un CRUD de posts para poder consumir la API en otros proyectos
 
-## 1 Desarrollo de la API
+## 1 Preparación de la API
 
 ### 1.1 Dependencias
 
@@ -24,7 +24,9 @@ Proyecto backend donde gestionaremos un login/signin con JWT y los usuarios podr
 
 · npm run lint: Ejecuta las reglas establecidas en el paquete instalado standard y te indica los errores que hay (pudiendo no ser bloqueantes para levantar el servidor)
 
-### 1.2 Modelado y conexion a MongoDB
+## 2 Desarrollo de la API
+
+### 2.1 Modelado y conexion a MongoDB
 Creamos el modelo Post para gestionar nuestras peticiones, pero al estar en una base de datos NoSQL, es un modelado de aplicacion y no de bbdd, por ello, si insertamos/modificamos objetos en mongo sin pasar por el servidor, podremos crear objetos del tipo que queramos, con los campos que queramos
 
 Para la conexion a mongo, usaremos un fichero .env con los datos de conexion y conectaremos la aplicacion con la bbdd en la nube (ATLAS)
