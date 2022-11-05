@@ -4,8 +4,19 @@ const postSchema = new Schema({
   contenido: String,
   fecha: Date,
   favorito: Boolean
-})
+},
+{ timestamps: true })
 
 const Post = model('Post', postSchema)
 
-module.exports = { Post }
+const getPosts = async (filters) => {
+  const posts = await Post.find(filters)
+  return posts
+}
+
+const getPostById = async (id) => {
+  const post = await Post.findById(id)
+  return post
+}
+
+module.exports = { getPosts, getPostById }
