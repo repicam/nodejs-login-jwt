@@ -40,13 +40,15 @@ Para la conexion a mongo, usaremos un fichero .env con los datos de conexion y c
 
 · POST: Creamos la petición que creará nuevos posts (apuntando a http://localhost:3000/api/v1/posts) con un body del siguiente estilo
 
-  {
-    "contenido": "I love this",
+    {
 
-    "favorito": true,
+        "contenido": "I love this",
 
-    "fecha": "2022-11-11"
-  }
+        "favorito": true,
+
+        "fecha": "2022-11-11"
+
+    }
 
 #### 2.1.3 Manejo de errores con middleware
 A través de los middleware de express, podemos añadir un control de errores con el parámetro next. Esto llama a la siguiente ruta que coincide, pero si lanzamos un error, va al primer middleware que recibe errores (nuestro fichero errorHandler)
