@@ -28,4 +28,17 @@ const getPostById = async (req, res, next) => {
   }
 }
 
-module.exports = { getPosts, getPostById }
+const createPost = async (req, res, next) => {
+  try {
+    const newPost = await postService.createPost(req.body)
+    const response = {
+      success: true,
+      data: newPost
+    }
+    res.status(201).json(response)
+  } catch (error) {
+    next(error)
+  }
+}
+
+module.exports = { getPosts, getPostById, createPost }

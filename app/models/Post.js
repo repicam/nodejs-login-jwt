@@ -19,4 +19,15 @@ const getPostById = async (id) => {
   return post
 }
 
-module.exports = { getPosts, getPostById }
+const createPost = async (newPostData) => {
+  const { contenido, fecha, favorito } = newPostData
+  const newPost = new Post({
+    contenido,
+    fecha: fecha || new Date(),
+    favorito: favorito || false
+  })
+
+  return await newPost.save()
+}
+
+module.exports = { getPosts, getPostById, createPost }

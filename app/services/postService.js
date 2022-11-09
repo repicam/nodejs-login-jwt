@@ -10,4 +10,9 @@ const getPostById = async (id) => {
   return post
 }
 
-module.exports = { getPosts, getPostById }
+const createPost = async (postData) => {
+  const newPost = Post.createPost(postData)
+  return newPost
+}
+
+module.exports = { getPosts, getPostById, createPost }
