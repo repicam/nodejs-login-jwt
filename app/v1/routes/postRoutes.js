@@ -7,5 +7,6 @@ router.route('/').get(postController.getPosts)
   .post(postController.createPost)
 
 router.route('/:id').get(postController.getPostById)
+  .patch(postController.updatePostById)
 
 module.exports = router

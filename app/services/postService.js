@@ -1,18 +1,30 @@
 const Post = require('../models/Post')
 
 const getPosts = async (filters) => {
-  const posts = await Post.getPosts(filters)
-  return posts
+  return await Post.getPosts(filters)
 }
 
 const getPostById = async (id) => {
-  const post = await Post.getPostById(id)
-  return post
+  return await Post.getPostById(id)
 }
 
 const createPost = async (postData) => {
-  const newPost = Post.createPost(postData)
-  return newPost
+  const { contenido, fecha, favorito } = postData
+  const newPostData = {
+    contenido,
+    fecha: fecha || new Date(),
+    favorito: favorito || false
+  }
+
+  return Post.createPost(newPostData)
 }
 
-module.exports = { getPosts, getPostById, createPost }
+const updatePostById = async (id, postData) => {
+  if (postData.fecha) {
+    delete postData.fecha
+  }
+
+  return await Post.updatePostById(id, postData)
+}
+
+module.exports = { getPosts, getPostById, createPost, updatePostById }

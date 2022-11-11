@@ -10,24 +10,21 @@ const postSchema = new Schema({
 const Post = model('Post', postSchema)
 
 const getPosts = async (filters) => {
-  const posts = await Post.find(filters)
-  return posts
+  return await Post.find(filters)
 }
 
 const getPostById = async (id) => {
-  const post = await Post.findById(id)
-  return post
+  return await Post.findById(id)
 }
 
 const createPost = async (newPostData) => {
-  const { contenido, fecha, favorito } = newPostData
-  const newPost = new Post({
-    contenido,
-    fecha: fecha || new Date(),
-    favorito: favorito || false
-  })
+  const newPost = new Post(newPostData)
 
   return await newPost.save()
 }
 
-module.exports = { getPosts, getPostById, createPost }
+const updatePostById = async (id, editedPost) => {
+  return await Post.findByIdAndUpdate(id, editedPost, { new: true })
+}
+
+module.exports = { getPosts, getPostById, createPost, updatePostById }

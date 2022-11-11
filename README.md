@@ -50,5 +50,7 @@ Para la conexion a mongo, usaremos un fichero .env con los datos de conexion y c
 
     }
 
+· PATCH: Creamos la petición que modificará los posts (apuntando a http://localhost:3000/api/v1/posts/:id) con un body como el de arriba, pero sin pasar la fecha, ya que la fecha de creación del post no la modificaremos. Si nos la mandan, la eliminaremos del cuerpo de la petición
+
 #### 2.1.3 Manejo de errores con middleware
 A través de los middleware de express, podemos añadir un control de errores con el parámetro next. Esto llama a la siguiente ruta que coincide, pero si lanzamos un error, va al primer middleware que recibe errores (nuestro fichero errorHandler)
