@@ -1,11 +1,11 @@
 const Post = require('../models/Post')
 
 const getPosts = async (filters) => {
-  return await Post.getPosts(filters)
+  return await Post.find(filters)
 }
 
 const getPostById = async (id) => {
-  return await Post.getPostById(id)
+  return await Post.findById(id)
 }
 
 const createPost = async (postData) => {
@@ -16,7 +16,7 @@ const createPost = async (postData) => {
     favorito: favorito || false
   }
 
-  return Post.createPost(newPostData)
+  return Post.create(newPostData)
 }
 
 const updatePostById = async (id, postData) => {
@@ -24,7 +24,34 @@ const updatePostById = async (id, postData) => {
     delete postData.fecha
   }
 
-  return await Post.updatePostById(id, postData)
+  const updatedPost = await Post.updateById(id, postData)
+  const response = {
+    success: true,
+    data: updatedPost,
+    errorMsg: null,
+    statusCode: 200
+  }
+  if (!updatedPost) {
+    response.success = false
+    response.errorMsg = 'No existe post con el id indicado'
+    response.statusCode = 404
+  }
+  return response
 }
 
-module.exports = { getPosts, getPostById, createPost, updatePostById }
+const deletePostById = async (id) => {
+  const data = await Post.deleteById(id)
+  const response = {
+    success: true,
+    errorMsg: null,
+    statusCode: 200
+  }
+  if (!data) {
+    response.success = false
+    response.errorMsg = 'No existe post con el id indicado'
+    response.statusCode = 404
+  }
+  return response
+}
+
+module.exports = { getPosts, getPostById, createPost, updatePostById, deletePostById }

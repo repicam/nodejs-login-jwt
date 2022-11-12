@@ -1,7 +1,11 @@
 const { model, Schema } = require('mongoose')
 
 const postSchema = new Schema({
-  contenido: String,
+  contenido: {
+    type: String,
+    minlength: 15,
+    required: true
+  },
   fecha: Date,
   favorito: Boolean
 },
@@ -9,22 +13,26 @@ const postSchema = new Schema({
 
 const Post = model('Post', postSchema)
 
-const getPosts = async (filters) => {
+const find = async (filters) => {
   return await Post.find(filters)
 }
 
-const getPostById = async (id) => {
+const findById = async (id) => {
   return await Post.findById(id)
 }
 
-const createPost = async (newPostData) => {
+const create = async (newPostData) => {
   const newPost = new Post(newPostData)
 
   return await newPost.save()
 }
 
-const updatePostById = async (id, editedPost) => {
+const updateById = async (id, editedPost) => {
   return await Post.findByIdAndUpdate(id, editedPost, { new: true })
 }
 
-module.exports = { getPosts, getPostById, createPost, updatePostById }
+const deleteById = async (id) => {
+  return await Post.findByIdAndDelete(id)
+}
+
+module.exports = { find, findById, create, updateById, deleteById }

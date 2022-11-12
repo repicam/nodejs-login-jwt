@@ -8,7 +8,7 @@ const getPosts = async (req, res, next) => {
       success: true,
       data: posts
     }
-    res.status(201).json(response)
+    res.status(200).json(response)
   } catch (error) {
     next(error)
   }
@@ -20,9 +20,9 @@ const getPostById = async (req, res, next) => {
     const post = await postService.getPostById(id)
     const response = {
       success: true,
-      data: post
+      data: post || {}
     }
-    res.status(201).json(response)
+    res.status(200).json(response)
   } catch (error) {
     next(error)
   }
@@ -43,15 +43,29 @@ const createPost = async (req, res, next) => {
 
 const updatePostById = async (req, res, next) => {
   try {
-    const updatedPost = await postService.updatePostById(req.params.id, req.body)
+    const { success, data, errorMsg, statusCode } = await postService.updatePostById(req.params.id, req.body)
     const response = {
-      success: true,
-      data: updatedPost
+      success,
+      data,
+      errorMsg
     }
-    res.status(201).json(response)
+    res.status(statusCode).json(response)
   } catch (error) {
     next(error)
   }
 }
 
-module.exports = { getPosts, getPostById, createPost, updatePostById }
+const deletePostById = async (req, res, next) => {
+  try {
+    const { success, errorMsg, statusCode } = await postService.deletePostById(req.params.id)
+    const response = {
+      success,
+      errorMsg
+    }
+    res.status(statusCode).json(response)
+  } catch (error) {
+    next(error)
+  }
+}
+
+module.exports = { getPosts, getPostById, createPost, updatePostById, deletePostById }

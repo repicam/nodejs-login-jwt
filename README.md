@@ -28,14 +28,15 @@ Proyecto backend donde gestionaremos un login/signin con JWT y los usuarios podr
 
 ## 2 Desarrollo de la API
 
-### 2.1 Posts
+### 2.1 Conexion a BBDD
 
-#### 2.1.1 Modelado y conexion a MongoDB
-Creamos el modelo Post para gestionar nuestras peticiones, pero al estar en una base de datos NoSQL, es un modelado de aplicacion y no de bbdd, por ello, si insertamos/modificamos objetos en mongo sin pasar por el servidor, podremos crear objetos del tipo que queramos, con los campos que queramos
+Usaremos MongoDB con la dependencia de mongoose. Para la conexion a mongo, usaremos un fichero .env con los datos de acceso y conectaremos la aplicacion con la versión de MongoDB en la nube (ATLAS)
+### 2.2 Posts
 
-Para la conexion a mongo, usaremos un fichero .env con los datos de conexion y conectaremos la aplicacion con la bbdd en la nube (ATLAS)
+#### 2.2.1 Modelado
+Creamos el modelo Post para gestionar nuestras peticiones, pero al estar en una base de datos NoSQL, es un modelado de aplicacion y no de bbdd, por ello, si insertamos/modificamos objetos en mongo sin pasar por el servidor, podremos crear objetos del tipo que queramos, con los campos que queramos. Esto es lo que sacrificamos usando una bbdd NoSQL
 
-#### 2.1.2 CRUD (acciones)
+#### 2.2.2 CRUD (acciones)
 · GET: Creamos las peticiones para obtener todos los posts (o con filter parameters e.g. "http://localhost:3000/api/v1/posts?favorito=true") u obtener uno por id (e.g. "http://localhost:3000/api/v1/posts/63654ae3c73cc90e731d08bd"))
 
 · POST: Creamos la petición que creará nuevos posts (apuntando a http://localhost:3000/api/v1/posts) con un body del siguiente estilo
@@ -52,5 +53,9 @@ Para la conexion a mongo, usaremos un fichero .env con los datos de conexion y c
 
 · PATCH: Creamos la petición que modificará los posts (apuntando a http://localhost:3000/api/v1/posts/:id) con un body como el de arriba, pero sin pasar la fecha, ya que la fecha de creación del post no la modificaremos. Si nos la mandan, la eliminaremos del cuerpo de la petición
 
-#### 2.1.3 Manejo de errores con middleware
-A través de los middleware de express, podemos añadir un control de errores con el parámetro next. Esto llama a la siguiente ruta que coincide, pero si lanzamos un error, va al primer middleware que recibe errores (nuestro fichero errorHandler)
+· DELETE: Creamos la petición que eliminará los posts (apuntando a http://localhost:3000/api/v1/posts/:id)
+
+### 2.3 Manejo de errores con middleware
+A través de los middleware de express, podemos añadir un control de errores con el parámetro next. Esto llama a la siguiente ruta que coincide, pero si lanzamos un error, va al primer middleware que recibe errores (nuestro fichero errorHandler). En este fichero comprobamos los CastError (al usar ids de mongo, tienen un formato específico) y ValidationError (en el modelo definimos que la propiedad contenido de los Posts es obligatoria y con una longitud mínima de 15 caracteres)
+
+Por otro lado, tenemos el control de endpoints no registrados (nuestro fichero unknownEndpoint). Este va delante, en el middleware, del fichero de errores, porque será el primero que encuentre si no coincide ninguna ruta. Si los errores ya vienen en las rutas, con el lanzamiento del error (next(error)) y nuestro fichero que espera un error, lo podemos separar correctamente
