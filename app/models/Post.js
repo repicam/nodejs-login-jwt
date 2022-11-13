@@ -7,7 +7,11 @@ const postSchema = new Schema({
     required: true
   },
   fecha: Date,
-  favorito: Boolean
+  favorito: Boolean,
+  user: {
+    type: Schema.Types.ObjectId,
+    ref: 'User'
+  }
 },
 { timestamps: true })
 
