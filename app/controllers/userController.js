@@ -29,5 +29,6 @@ const login = async (req, res, next) => {
 }
 
 const changePassword = (req, res, next) => { res.status(404).json('Endpoint en creación') }
+const verify = (req, res, next) => { res.status(404).json('Endpoint en creación') }
 
-module.exports = { signin, login, changePassword }
+module.exports = { signin, login, changePassword, verify }

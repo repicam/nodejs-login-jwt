@@ -108,3 +108,10 @@ Cuando recuperamos un usuario, eliminamos la contraseña. Para eso usamos el mé
 
     }
 
+· POST: Creamos la petición que verificará si el token administrado es válido (apuntando a http://localhost:3000/api/v1/users/verify) con un body del siguiente estilo. Esto nos sirve para verificar si el token que tenemos sigue teniendo validez. En ese caso nos devuelve un success true o false
+
+    {
+
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+
+    }
