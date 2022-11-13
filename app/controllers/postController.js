@@ -3,12 +3,13 @@ const postService = require('../services/postService')
 const getPosts = async (req, res, next) => {
   try {
     const filters = req.query
-    const posts = await postService.getPosts(filters)
+    const { success, data, errorMsg, statusCode } = await postService.getPosts(filters)
     const response = {
-      success: true,
-      data: posts
+      success,
+      data,
+      errorMsg
     }
-    res.status(200).json(response)
+    res.status(statusCode).json(response)
   } catch (error) {
     next(error)
   }
@@ -17,12 +18,13 @@ const getPosts = async (req, res, next) => {
 const getPostById = async (req, res, next) => {
   try {
     const { id } = req.params
-    const post = await postService.getPostById(id)
+    const { success, data, errorMsg, statusCode } = await postService.getPostById(id)
     const response = {
-      success: true,
-      data: post || {}
+      success,
+      data,
+      errorMsg
     }
-    res.status(200).json(response)
+    res.status(statusCode).json(response)
   } catch (error) {
     next(error)
   }
@@ -30,12 +32,13 @@ const getPostById = async (req, res, next) => {
 
 const createPost = async (req, res, next) => {
   try {
-    const newPost = await postService.createPost(req.body)
+    const { success, data, errorMsg, statusCode } = await postService.createPost(req.body)
     const response = {
-      success: true,
-      data: newPost
+      success,
+      data,
+      errorMsg
     }
-    res.status(201).json(response)
+    res.status(statusCode).json(response)
   } catch (error) {
     next(error)
   }

@@ -1,18 +1,14 @@
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const User = require('../models/User')
+const { createResponse } = require('../utils/responseGenerator')
 
 const SALT_ROUNDS = 10
 
 const signin = async (userData) => {
   const { username, nombre, password } = userData
 
-  const response = {
-    success: true,
-    data: null,
-    errorMsg: null,
-    statusCode: 201
-  }
+  let newUser = null
 
   const usernameExists = await User.find({ username })
   if (!usernameExists) {
@@ -23,30 +19,22 @@ const signin = async (userData) => {
       password: passwordHash
     }
 
-    const newUser = await User.create(newUserData)
-    response.data = newUser
-  } else {
-    response.success = false
-    response.errorMsg = 'Username utilizado ya existe'
-    response.statusCode = 400
+    newUser = await User.create(newUserData)
   }
 
-  return response
+  const errorMsg = !usernameExists ? null : 'Username utilizado ya existe'
+  const statusCode = !usernameExists ? 201 : 400
+  return createResponse(!!usernameExists, newUser, errorMsg, statusCode)
 }
 
 const login = async (userData) => {
   const { username, password } = userData
 
-  const response = {
-    success: true,
-    data: null,
-    errorMsg: null,
-    statusCode: 200
-  }
+  let data = null
 
   const userExists = await User.find({ username })
   const passwordCorrect = !userExists ? false : await bcrypt.compare(password, userExists.password)
-  if (userExists && passwordCorrect) {
+  if (passwordCorrect) {
     const userToken = {
       username: userExists.username,
       id: userExists._id
@@ -54,17 +42,15 @@ const login = async (userData) => {
 
     const token = jwt.sign(userToken, process.env.JWT_SECRET)
 
-    response.data = {
+    data = {
       token,
       username: userExists.username
     }
-  } else {
-    response.success = false
-    response.errorMsg = 'Usuario y/o contraseña incorrecta'
-    response.statusCode = 400
   }
 
-  return response
+  const errorMsg = passwordCorrect ? null : 'Usuario y/o contraseña incorrecta'
+  const statusCode = passwordCorrect ? 200 : 400
+  return createResponse(passwordCorrect, data, errorMsg, statusCode)
 }
 
 module.exports = { signin, login }
