@@ -22,8 +22,8 @@ userSchema.set('toJSON', {
 
 const User = model('User', userSchema)
 
-const find = async (filters) => {
-  return await User.find(filters)
+const find = async (username) => {
+  return await User.findOne(username)
 }
 
 const create = async (newUserData) => {

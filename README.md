@@ -21,6 +21,8 @@ Proyecto backend donde gestionaremos un login/signin con JWT y los usuarios podr
 
 · bcrypt: Modulo que nos ayuda a hashear la contraseña del usuario y no tenerla en texto plano en la bbdd
 
+· jsonwebtoken: Modulo que nos permite generar tokens para autenticacion de los usuarios
+
 ### 1.2 Scripts
 · npm run dev: Activa el entorno de desarrollo, con la dependencia nodemon, que escucha los cambios y refresca el servidor
 
@@ -72,7 +74,7 @@ Creamos el modelo User para saber quien ha creado los posts. En el modelo, crear
 Cuando recuperamos un usuario, eliminamos la contraseña. Para eso usamos el método transform eliminando los campos que no queremos que se devuelvan en la petición
 
 #### 2.2.2 CRUD (acciones)
-· POST: Creamos la petición que creará nuevos usuarios (apuntando a http://localhost:3000/api/v1/users) con un body del siguiente estilo
+· POST: Creamos la petición que creará nuevos usuarios (apuntando a http://localhost:3000/api/signin) con un body del siguiente estilo
 
     {
 
@@ -83,3 +85,26 @@ Cuando recuperamos un usuario, eliminamos la contraseña. Para eso usamos el mé
         "password": "desarrollobackend"
 
     }
+
+· POST: Creamos la petición que autorizará a los usuarios (apuntando a http://localhost:3000/api/login) con un body del siguiente estilo. Esto nos devuelve el username usado con el token de autorización, en caso de ser correcto
+
+    {
+
+        "username": "repicam",
+
+        "password": "desarrollobackend"
+
+    }
+
+· PATCH: (EN PROGRESO...) Creamos la petición que permite modificar la contraseña a los usuarios (apuntando a http://localhost:3000/api/v1/users) con un body del siguiente estilo
+
+    {
+
+        "username": "repicam",
+
+        "password": "desarrollobackend"
+
+        "newPassword": "desarrollandobackend",
+
+    }
+
