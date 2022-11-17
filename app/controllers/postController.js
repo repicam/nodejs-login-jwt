@@ -32,7 +32,7 @@ const getPostById = async (req, res, next) => {
 
 const createPost = async (req, res, next) => {
   try {
-    const { success, data, errorMsg, statusCode } = await postService.createPost(req.body)
+    const { success, data, errorMsg, statusCode } = await postService.createPost(req)
     const response = {
       success,
       data,
@@ -46,7 +46,7 @@ const createPost = async (req, res, next) => {
 
 const updatePostById = async (req, res, next) => {
   try {
-    const { success, data, errorMsg, statusCode } = await postService.updatePostById(req.params.id, req.body)
+    const { success, data, errorMsg, statusCode } = await postService.updatePostById(req)
     const response = {
       success,
       data,
@@ -60,7 +60,7 @@ const updatePostById = async (req, res, next) => {
 
 const deletePostById = async (req, res, next) => {
   try {
-    const { success, errorMsg, statusCode } = await postService.deletePostById(req.params.id)
+    const { success, errorMsg, statusCode } = await postService.deletePostById(req)
     const response = {
       success,
       errorMsg

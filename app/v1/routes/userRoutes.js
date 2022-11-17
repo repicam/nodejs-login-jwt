@@ -1,6 +1,6 @@
 const express = require('express')
 const userController = require('../../controllers/userController')
-const checkToken = require('../../middlewares/checkToken')
+const { checkToken } = require('../../utils/jwtValidator')
 
 const router = express.Router()
 

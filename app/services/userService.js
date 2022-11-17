@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const User = require('../models/User')
 const { createResponse } = require('../utils/responseGenerator')
+const { decodeToken } = require('../utils/jwtValidator')
 
 const SALT_ROUNDS = 10
 
@@ -74,14 +75,8 @@ const personalInformation = async (request) => {
 
   let data = null
 
-  const token = headers.authorization.split(' ')[1]
-  const { id } = jwt.decode(token, process.env.JWT_SECRET)
-
-  if (!id) {
-    return createResponse(false, data, 'El token no pertenece a ningún usuario', 400)
-  }
-
-  const userExists = await User.findById(id)
+  const { id } = decodeToken(headers)
+  const userExists = await getUserById(id)
   data = { userExists }
 
   const errorMsg = userExists ? null : 'Usuario no existe'
@@ -96,11 +91,9 @@ const changePassword = async (request) => {
   if (!password) {
     return createResponse(false, null, 'Required: password', 400)
   }
-  const token = headers.authorization.split(' ')[1]
-  const { id } = jwt.decode(token, process.env.JWT_SECRET)
+  const { id } = decodeToken(headers)
+  const userExists = await getUserById(id)
 
-  const userExists = await User.findById(id)
-  console.log(userExists)
   if (userExists) {
     const passwordHash = await bcrypt.hash(password, SALT_ROUNDS)
     await User.update(id, { password: passwordHash })
@@ -111,4 +104,13 @@ const changePassword = async (request) => {
   return createResponse(!!userExists, null, errorMsg, statusCode)
 }
 
-module.exports = { signin, login, personalInformation, changePassword }
+const getUserById = async (id) => {
+  return await User.findById(id)
+}
+
+const getUserByHeader = async (headers) => {
+  const { id } = decodeToken(headers)
+  return await getUserById(id)
+}
+
+module.exports = { signin, login, personalInformation, changePassword, getUserByHeader }

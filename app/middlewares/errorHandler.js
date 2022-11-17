@@ -8,7 +8,9 @@ const errorHandler = (error, request, response, next) => {
   } else if (error.name === 'TokenExpiredError') {
     return response.status(401).json({ error: 'El token administrado ha caducado' })
   } else if (error.name === 'JsonWebTokenError') {
-    return response.status(401).json({ error: 'Tu petición no tiene cabecera de autorización o está mal formada' })
+    return response.status(401).json({ error: 'Tu petición no tiene cabecera de autorización o es incorrecta' })
+  } else if (error.message === 'NotYours') {
+    return response.status(401).json({ error: 'Este post no te pertenece' })
   }
 
   next(error)
