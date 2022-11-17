@@ -6,25 +6,38 @@ const { createResponse } = require('../utils/responseGenerator')
 const SALT_ROUNDS = 10
 
 const signin = async (userData) => {
-  const { username, nombre, password } = userData
+  const { username, password } = userData
 
-  let newUser = null
+  let data = null
 
   const usernameExists = await User.find({ username })
   if (!usernameExists) {
     const passwordHash = await bcrypt.hash(password, SALT_ROUNDS)
-    const newUserData = {
+
+    userData.password = passwordHash
+    userData.admin = false
+
+    const createdUser = await User.create(userData)
+
+    const userToken = {
       username,
-      nombre,
-      password: passwordHash
+      id: createdUser._id,
+      admin: createdUser.admin
     }
 
-    newUser = await User.create(newUserData)
+    const token = jwt.sign(userToken,
+      process.env.JWT_SECRET,
+      { expiresIn: '90 days' }
+    )
+
+    data = {
+      token
+    }
   }
 
-  const errorMsg = !usernameExists ? null : 'Username utilizado ya existe'
+  const errorMsg = !usernameExists ? null : 'Username utilizado ya existe. Puede iniciar sesión'
   const statusCode = !usernameExists ? 201 : 400
-  return createResponse(!!usernameExists, newUser, errorMsg, statusCode)
+  return createResponse(!usernameExists, data, errorMsg, statusCode)
 }
 
 const login = async (userData) => {
@@ -37,14 +50,17 @@ const login = async (userData) => {
   if (passwordCorrect) {
     const userToken = {
       username: userExists.username,
-      id: userExists._id
+      id: userExists._id,
+      admin: userExists.admin
     }
 
-    const token = jwt.sign(userToken, process.env.JWT_SECRET)
+    const token = jwt.sign(userToken,
+      process.env.JWT_SECRET,
+      { expiresIn: '90 days' }
+    )
 
     data = {
-      token,
-      username: userExists.username
+      token
     }
   }
 
@@ -53,4 +69,46 @@ const login = async (userData) => {
   return createResponse(passwordCorrect, data, errorMsg, statusCode)
 }
 
-module.exports = { signin, login }
+const personalInformation = async (request) => {
+  const { headers } = request
+
+  let data = null
+
+  const token = headers.authorization.split(' ')[1]
+  const { id } = jwt.decode(token, process.env.JWT_SECRET)
+
+  if (!id) {
+    return createResponse(false, data, 'El token no pertenece a ningún usuario', 400)
+  }
+
+  const userExists = await User.findById(id)
+  data = { userExists }
+
+  const errorMsg = userExists ? null : 'Usuario no existe'
+  const statusCode = userExists ? 200 : 400
+  return createResponse(!!userExists, data, errorMsg, statusCode)
+}
+
+const changePassword = async (request) => {
+  const { body, headers } = request
+  const { password } = body
+
+  if (!password) {
+    return createResponse(false, null, 'Required: password', 400)
+  }
+  const token = headers.authorization.split(' ')[1]
+  const { id } = jwt.decode(token, process.env.JWT_SECRET)
+
+  const userExists = await User.findById(id)
+  console.log(userExists)
+  if (userExists) {
+    const passwordHash = await bcrypt.hash(password, SALT_ROUNDS)
+    await User.update(id, { password: passwordHash })
+  }
+
+  const errorMsg = userExists ? null : 'Token incorrecto'
+  const statusCode = userExists ? 200 : 400
+  return createResponse(!!userExists, null, errorMsg, statusCode)
+}
+
+module.exports = { signin, login, personalInformation, changePassword }

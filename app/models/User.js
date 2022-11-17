@@ -11,19 +11,30 @@ const userSchema = new Schema({
   notes: [{
     type: Schema.Types.ObjectId,
     ref: 'Post'
-  }]
+  }],
+  edad: Number,
+  biografia: String,
+  email: String,
+  admin: Boolean
 })
 
 userSchema.set('toJSON', {
   transform: (document, returnedObject) => {
     delete returnedObject.password
+    delete returnedObject.admin
+    delete returnedObject._id
+    delete returnedObject.__v
   }
 })
 
 const User = model('User', userSchema)
 
-const find = async (username) => {
-  return await User.findOne(username)
+const find = async (data) => {
+  return await User.findOne(data)
+}
+
+const findById = async (id) => {
+  return await User.findById(id)
 }
 
 const create = async (newUserData) => {
@@ -33,4 +44,8 @@ const create = async (newUserData) => {
   return user
 }
 
-module.exports = { find, create }
+const update = async (id, userData) => {
+  return await User.findByIdAndUpdate(id, userData, { new: true })
+}
+
+module.exports = { find, findById, create, update }

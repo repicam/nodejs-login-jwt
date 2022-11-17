@@ -28,7 +28,32 @@ const login = async (req, res, next) => {
   }
 }
 
-const changePassword = (req, res, next) => { res.status(404).json('Endpoint en creación') }
-const verify = (req, res, next) => { res.status(404).json('Endpoint en creación') }
+const personalInformation = async (req, res, next) => {
+  try {
+    const { success, data, errorMsg, statusCode } = await userService.personalInformation(req)
+    const response = {
+      success,
+      data,
+      errorMsg
+    }
+    res.status(statusCode).json(response)
+  } catch (error) {
+    next(error)
+  }
+}
 
-module.exports = { signin, login, changePassword, verify }
+const changePassword = async (req, res, next) => {
+  try {
+    const { success, data, errorMsg, statusCode } = await userService.changePassword(req)
+    const response = {
+      success,
+      data,
+      errorMsg
+    }
+    res.status(statusCode).json(response)
+  } catch (error) {
+    next(error)
+  }
+}
+
+module.exports = { signin, login, changePassword, personalInformation }

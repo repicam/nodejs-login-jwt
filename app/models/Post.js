@@ -15,6 +15,12 @@ const postSchema = new Schema({
 },
 { timestamps: true })
 
+postSchema.set('toJSON', {
+  transform: (document, returnedObject) => {
+    delete returnedObject.__v
+  }
+})
+
 const Post = model('Post', postSchema)
 
 const find = async (filters) => {

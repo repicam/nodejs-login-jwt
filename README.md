@@ -66,6 +66,8 @@ A través de los middleware de express, podemos añadir un control de errores co
 
 Por otro lado, tenemos el control de endpoints no registrados (nuestro fichero unknownEndpoint). Este va delante, en el middleware, del fichero de errores, porque será el primero que encuentre si no coincide ninguna ruta. Si los errores ya vienen en las rutas, con el lanzamiento del error (next(error)) y nuestro fichero que espera un error, lo podemos separar correctamente
 
+Crearemos otro middleware, que nos comprueba si el token administrado en la cabecera es válido, si esta caducado o mal formado
+
 ### 2.4 Usuarios
 
 #### 2.2.1 Modelado
@@ -82,7 +84,13 @@ Cuando recuperamos un usuario, eliminamos la contraseña. Para eso usamos el mé
 
         "nombre": "Ivan Repiso",
 
-        "password": "desarrollobackend"
+        "password": "desarrollobackend",
+
+        "edad": 24,
+
+        "biografia": "Hola, me llamo Iván y soy desarrollador backend",
+  
+        "email": "irepisocamara@gmail.com"
 
     }
 
@@ -96,22 +104,12 @@ Cuando recuperamos un usuario, eliminamos la contraseña. Para eso usamos el mé
 
     }
 
-· PATCH: (EN PROGRESO...) Creamos la petición que permite modificar la contraseña a los usuarios (apuntando a http://localhost:3000/api/v1/users) con un body del siguiente estilo
+· PATCH: Creamos la petición que permite modificar la contraseña a los usuarios (apuntando a http://localhost:3000/api/v1/users/change/password) con un body del siguiente estilo y administrando un token en el header _Authorization_
 
     {
-
-        "username": "repicam",
 
         "password": "desarrollobackend"
 
-        "newPassword": "desarrollandobackend",
-
     }
 
-· POST: Creamos la petición que verificará si el token administrado es válido (apuntando a http://localhost:3000/api/v1/users/verify) con un body del siguiente estilo. Esto nos sirve para verificar si el token que tenemos sigue teniendo validez. En ese caso nos devuelve un success true o false
-
-    {
-
-        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
-
-    }
+· POST: Creamos la petición que verificará si el token administrado a través del header _Authorization_ es válido (apuntando a http://localhost:3000/api/v1/users/me). Esto nos sirve para verificar si el token que tenemos sigue teniendo validez. En ese caso nos devuelve nuestra información personal
