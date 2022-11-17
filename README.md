@@ -45,7 +45,7 @@ Ahora con la entrada de los usuarios, modificamos el modelo para que contenga el
 #### 2.2.2 CRUD (acciones)
 · GET: Creamos las peticiones para obtener todos los posts (o con filter parameters e.g. "http://localhost:3000/api/v1/posts?favorito=true") u obtener uno por id (e.g. "http://localhost:3000/api/v1/posts/63654ae3c73cc90e731d08bd"))
 
-· POST: Creamos la petición que creará nuevos posts (apuntando a http://localhost:3000/api/v1/posts) con un body del siguiente estilo
+· POST: Creamos la petición que creará nuevos posts (apuntando a http://localhost:3000/api/v1/posts) con un body del siguiente estilo y administrando un token en el header _Authorization_
 
     {
 
@@ -57,9 +57,9 @@ Ahora con la entrada de los usuarios, modificamos el modelo para que contenga el
 
     }
 
-· PATCH: Creamos la petición que modificará los posts (apuntando a http://localhost:3000/api/v1/posts/:id) con un body como el de arriba, pero sin pasar la fecha, ya que la fecha de creación del post no la modificaremos. Si nos la mandan, la eliminaremos del cuerpo de la petición
+· PATCH: Creamos la petición que modificará los posts (apuntando a http://localhost:3000/api/v1/posts/:id) con un body como el de arriba, pero sin pasar la fecha, ya que la fecha de creación del post no la modificaremos. Si nos la mandan, la eliminaremos del cuerpo de la petición. También administrando un token en el header _Authorization_ y verificamos su propiedad creando el error NotYours
 
-· DELETE: Creamos la petición que eliminará los posts (apuntando a http://localhost:3000/api/v1/posts/:id)
+· DELETE: Creamos la petición que eliminará los posts (apuntando a http://localhost:3000/api/v1/posts/:id) y administrando un token en el header _Authorization_, que verificamos su propiedad con el error NotYours
 
 ### 2.3 Manejo de errores con middleware
 A través de los middleware de express, podemos añadir un control de errores con el parámetro next. Esto llama a la siguiente ruta que coincide, pero si lanzamos un error, va al primer middleware que recibe errores (nuestro fichero errorHandler). En este fichero comprobamos los CastError (al usar ids de mongo, tienen un formato específico) y ValidationError (en el modelo definimos que la propiedad contenido de los Posts es obligatoria y con una longitud mínima de 15 caracteres)
